@@ -22,6 +22,4 @@ if (process.env.NODE_ENV === 'dev') {
 
 }
 
-urlDB = 'mongodb+srv://scmongo:9KYnjdlSoAVH0GrP@cluster0-jqetk.mongodb.net/test';
-
 process.env.URL_DB = urlDB;
