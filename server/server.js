@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoose = require('mongoose')
 const app = express()
 const bodyParser = require('body-parser')
 
@@ -13,47 +14,18 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+// importar las rutas
+app.use(require('./controllers/user'))
 
-app.get('/', function(req, res) {
-    //res.send('Hello World')
-    res.json('Hello World');
-})
-
-app.get('/user', function(req, res) {
-    //res.send('Hello World')
-    res.json('Get USERS');
-})
-
-/*
-  Postman:   > body > x-www-form-urlencoded
-*/
-app.post('/user', function(req, res) {
-    let body = req.body;
-
-    if (body.name === undefined) {
-        res.status(400).json({
-            ok: false,
-            message: "Falta nombre de usuario"
-        });
-
-    } else {
-        res.json({ "user": body });
+console.log(`Connecting to DB: ${process.env.URL_DB} ...`);
+mongoose.connect(process.env.URL_DB, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
+    (err, res) => {
+        if (err) throw err;
+        console.log('Database MONGO on 27017 connected !');
     }
+);
 
-})
-
-app.put('/user/:id', function(req, res) {
-    //res.send('Hello World')
-    let id = req.params.id;
-
-    res.json({ "id": id });
-})
-
-app.delete('/user', function(req, res) {
-    //res.send('Hello World')
-    res.json('Delete USERS : deleting record');
-})
 
 app.listen(process.env.PORT, () => {
-    console.log(`Listen on port ${process.env.PORT}`);
+    console.log(`RestServer listen on port ${process.env.PORT}`);
 })
