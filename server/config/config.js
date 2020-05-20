@@ -18,7 +18,8 @@ if (process.env.NODE_ENV === 'dev') {
 
 } else {
 
-    urlDB = 'mongodb+srv://scmongo:9KYnjdlSoAVH0GrP@cluster0-jqetk.mongodb.net/test';
+    // heroku config:set MONGO_URI="<URL MONGO-ATLAS>"
+    urlDB = process.env.MONGO_URI;
 
 }
 
