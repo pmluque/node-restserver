@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // importar las rutas
-app.use(require('./controllers/user'))
+app.use(require('./routes/index.js'))
 
 console.log(`Connecting to DB: ${process.env.URL_DB} ...`);
 mongoose.connect(process.env.URL_DB, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },

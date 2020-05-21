@@ -10,10 +10,19 @@ const _ = require('underscore');
 
 const app = express();
 const User = require('../models/user');
+// Importar interceptores
+const { checkToken, checkRoleAdmin } = require('../middlewares/authentication');
 
 
+// El 2 parámetro es un middleware o interceptor
+app.get('/api/core/user', checkToken, (req, res) => {
 
-app.get('/api/core/user', function(req, res) {
+    console.log('Requester:', {
+        user: req.user,
+        name: req.user.name,
+        email: req.user.email
+    });
+
     //res.send('Hello World')
     //res.json('Get USERS local');
     // Ej. http://localhost:3000/user
@@ -35,7 +44,8 @@ app.get('/api/core/user', function(req, res) {
             if (err) {
                 return res.status(400).json({
                     ok: false,
-                    message: `No se pudo consultar los usuarios. ${err}`
+                    data: { error: err },
+                    message: `No se pudo consultar los usuarios.`
                 });
             }
 
@@ -71,7 +81,7 @@ app.get('/api/core/user', function(req, res) {
 /*
   Postman:   > body > x-www-form-urlencoded
 */
-app.post('/api/core/user', function(req, res) {
+app.post('/api/core/user', [checkToken, checkRoleAdmin], (req, res) => {
     let body = req.body;
 
     let user = new User({
@@ -86,7 +96,8 @@ app.post('/api/core/user', function(req, res) {
         if (err) {
             return res.status(400).json({
                 ok: false,
-                message: `Usuario no pudo crearse en la base de datos. ${err}`
+                data: { error: err },
+                message: `Usuario no pudo crearse en la base de datos.`
             });
         }
 
@@ -115,17 +126,19 @@ app.post('/api/core/user', function(req, res) {
 })
 
 //https://mongoosejs.com/docs/api.html#model_Model.findByIdAndUpdate
-app.put('/api/core/user/:id', function(req, res) {
+app.put('/api/core/user/:id', [checkToken, checkRoleAdmin], (req, res) => {
 
     let id = req.params.id;
-    let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'status']);
+    // Especificar qué campos enviamos para ser actualizados: retiramos password, email (es único)
+    let body = _.pick(req.body, ['name', 'img', 'role', 'status', 'google']);
 
     User.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, userDB) => {
 
         if (err) {
             return res.status(400).json({
                 ok: false,
-                message: `Usuario no pudo actualizarse en la base de datos. ${err}`
+                data: { error: err },
+                message: `Usuario no pudo actualizarse en la base de datos.`
             });
         }
 
@@ -150,7 +163,7 @@ app.put('/api/core/user/:id', function(req, res) {
 
  */
 
-app.delete('/api/core/user/:id', function(req, res) {
+app.delete('/api/core/user/:id', [checkToken, checkRoleAdmin], (req, res) => {
 
     let id = req.params.id;
     console.log('id: ' + id);
@@ -200,7 +213,8 @@ app.delete('/api/core/user/:id', function(req, res) {
         if (err) {
             return res.status(400).json({
                 ok: false,
-                message: `Usuario no pudo actualizarse en la base de datos. ${err}`
+                data: { error: err },
+                message: `Usuario no pudo actualizarse en la base de datos.`
             });
         }
 

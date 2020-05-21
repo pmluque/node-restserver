@@ -24,3 +24,16 @@ if (process.env.NODE_ENV === 'dev') {
 }
 
 process.env.URL_DB = urlDB;
+
+//========================================
+// JWT: Token expiration
+//========================================
+// 1000milisegundos(1s) x 60s(1m) x 60m(1h) x 24h(1dia) x 30d(dias)
+process.env.TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 30;
+
+//========================================
+// JWT: SEED for authentication
+// Declarar en Heroku una variable de entorno
+// heroku config:set TOKEN_SEED="*****"
+//========================================
+process.env.TOKEN_SEED = process.env.TOKEN_SEED || 'seed-developer-$%&';
