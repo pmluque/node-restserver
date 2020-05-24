@@ -1,7 +1,10 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const app = express()
-const bodyParser = require('body-parser')
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
+const bodyParser = require('body-parser');
+// Path es un paquete de serie en node. 
+// Sirve para que __dirname sea efectivo
+const path = require('path');
 
 // Cargamos configuración
 require('./config/config');
@@ -13,6 +16,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
+
+// Hacer accesible : path resuelve el path correctamente
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 // importar las rutas
 app.use(require('./routes/index.js'))

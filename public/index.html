@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 2 -->
+    <meta name="google-signin-client_id" content="972780077903-b82lscqo5vhp95s7k81lqmrqqvuhc47d.apps.googleusercontent.com">
+    <title>BIENVENIDA / GOOGLE Sign-In </title>
+    <!-- 1 -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+
+<body>
+    <!-- 3 -->
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <!-- 6 Sign Out -->
+    <p>
+        <a href="#" onclick="signOut();">Sign out</a>
+
+        <!-- 4 -->
+        <script>
+            function onSignIn(googleUser) {
+                var profile = googleUser.getBasicProfile();
+                console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+                console.log('Name: ' + profile.getName());
+                console.log('Image URL: ' + profile.getImageUrl());
+                console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+                var id_token = googleUser.getAuthResponse().id_token;
+                console.log('Token: ' + id_token);
+                var xhr = new XMLHttpRequest();
+                //xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
+                xhr.open('POST', '/api/auth/g');
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function() {
+                    console.log('Signed in as: ' + xhr.responseText);
+                };
+                xhr.send('idtoken=' + id_token);
+            }
+        </script>
+        <!-- 6 Sign Out -->
+        <script>
+            function signOut() {
+                var auth2 = gapi.auth2.getAuthInstance();
+                auth2.signOut().then(function() {
+                    console.log('User signed out.');
+                });
+            }
+        </script>
+        <!-- 5: habilitar acceso a public -->
+</body>
+
+</html>
