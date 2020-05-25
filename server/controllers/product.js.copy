@@ -1,0 +1,230 @@
+// 12.2 - PRODUCTOS
+// ------------------------------
+// 1. Crear aplicación express
+// 2. Importar los middleware de seguridad
+// 3. Importar los middleware de negocio
+// 4. Importar la entidad de base de datos
+// 5. Crear los metodos 
+// 6. Exportar la aplicación
+// 7. Regitrar las rutas en el routes/index.js
+// ------------------------------
+const ENTITY_NAME = 'product';
+const ENTITIES_NAME = 'products';
+const express = require('express');
+
+// Importar interceptores
+let { checkToken, checkRoleAdmin } = require('../middlewares/authentication');
+
+// Aplicación
+let app = express();
+let Entity = require(`../models/${ENTITY_NAME}`);
+
+// Rutas
+
+// ============================================================================
+// Listado : mostrar todas las categorías
+// GET
+// Usar populate para poblar las entidades
+//   - El nombre de la coleccion deben coincidir exactamente
+//   - Restringir campos con espacios
+// Ordenaciòn
+// ============================================================================
+
+app.get(`/api/data/test/${ENTITY_NAME}`, checkToken, (req, res) => {
+
+    Entity.find({})
+        .sort('name')
+        .populate('user', 'name email')
+        .populate('category', 'description')
+        .exec((err, entitiesList) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    data: { error: err },
+                    message: `Servidor no atendio la petición`
+                });
+            }
+
+            return res.status(200).json({
+                ok: true,
+                data: { ENTITIES_NAME: entitiesList },
+                message: 'Se retorno el listado'
+            });
+        });
+});
+
+// ======================================
+// ConsultaById : localizar una categoría dado su id
+// GET
+// ======================================
+app.get(`/api/data/test/${ENTITY_NAME}/:id`, checkToken, (req, res) => {
+
+    let id = req.params.id;
+
+    Entity.findById(id, (err, entityDB) => {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                data: { error: err },
+                message: `Servidor no atendio la petición`
+            });
+        }
+
+        if (!entityDB) {
+            return res.status(400).json({
+                ok: false,
+                data: { error: 'ERR_ID_UNKNOWN' },
+                message: `Base de datos no atendio la petición`
+            });
+        }
+
+        return res.status(200).json({
+            ok: true,
+            data: { ENTITY_NAME: entityDB },
+            message: 'Se retorno el registro solicitado'
+        });
+    });
+
+});
+
+// ======================================
+// Create : nueva categoria
+// POST
+// Headers
+//  1.  authorization : {{token}}
+// Body >> x-www-form-urlenconded
+//  1.  description
+// ======================================
+app.post(`/api/data/test/${ENTITY_NAME}`, checkToken, (req, res) => {
+    let body = req.body;
+    let entity = new Entity({
+        description: body.description,
+        user: req.user._id
+    });
+    entity.save((err, entityDB) => {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                data: { error: err },
+                message: `Servidor no atendio la petición`
+            });
+        }
+
+        if (!entityDB) {
+            return res.status(400).json({
+                ok: false,
+                data: { error: 'ERR_ID_UNKNOWN' },
+                message: `Base de datos no atendio la petición`
+            });
+        }
+
+        return res.status(200).json({
+            ok: true,
+            data: { ENTITY_NAME: entityDB },
+            message: 'Se registro nueva categoría'
+        });
+
+    });
+
+});
+
+// ======================================
+// Update :  categoria
+// PUT
+// Headers
+//  1.  authorization : {{token}}
+// Body >> x-www-form-urlenconded
+//  1.  description
+// ======================================
+app.put(`/api/data/test/${ENTITY_NAME}/:id`, checkToken, (req, res) => {
+
+    let id = req.params.id;
+    let body = req.body;
+    let descCategory = {
+        description: body.description
+    };
+
+    Entity.findByIdAndUpdate(id, descCategory, { new: true, runValidators: true },
+        (err, entityDB) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    data: { error: err },
+                    message: `Servidor no atendio la petición`
+                });
+            }
+
+            if (!entityDB) {
+                return res.status(400).json({
+                    ok: false,
+                    data: { error: 'ERR_ID_UNKNOWN' },
+                    message: `Base de datos no atendio la petición`
+                });
+            }
+
+            return res.status(200).json({
+                ok: true,
+                data: { entity: entityDB },
+                message: 'Se actualizo la categoría'
+            });
+
+        });
+
+});
+
+// ======================================
+// Delete :  PRODUCT
+// DELETE
+// Rules:
+//  1. Solo ROLE_ADMIN puede borrar
+//  2. Borrado físico
+// ======================================
+app.delete(`/api/data/test/${ENTITY_NAME}/:id`, [checkToken, checkRoleAdmin], (req, res) => {
+
+    let id = req.params.id;
+
+    Entity.findByIdAndRemove(id,
+        (err, entityDB) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    data: { error: err },
+                    message: `Servidor no atendio la petición`
+                });
+            }
+
+            if (!entityDB) {
+                return res.status(400).json({
+                    ok: false,
+                    data: { error: 'ERR_ID_UNKNOWN' },
+                    message: `Base de datos no atendio la petición`
+                });
+            }
+
+            return res.status(200).json({
+                ok: true,
+                data: { ENTITIY_NAME: entityDB },
+                message: 'Se borró la categoría'
+            });
+
+        });
+});
+
+
+// ======================================
+// METODOS INTERNOS
+// ======================================
+
+
+
+// ======================================
+//
+//  HACER PÚBLICOS SERVICIOS
+//
+// ======================================
+module.exports = app;
