@@ -12,12 +12,11 @@ const express = require('express');
 
 // Interceptores
 // -- De seguridad
-let { checkToken, checkRoleAdmin } = require('../middlewares/authentication');
+let { checkToken, checkRoleAdmin } = require('../../../middlewares/authentication');
 
 // Aplicación
 let app = express();
-let Entity = require('../models/product');
-const product = require('../models/product');
+let Entity = require('../../../models/product');
 
 // Rutas
 

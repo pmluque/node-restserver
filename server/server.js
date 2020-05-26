@@ -12,7 +12,8 @@ require('./config/config');
 // MIDDLEWARE - lineas por las que pasa siempre
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+// app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true })); // para que reconozca el multipart
 
 // parse application/json
 app.use(bodyParser.json())

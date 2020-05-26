@@ -9,9 +9,9 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const app = express();
-const User = require('../models/user');
+const User = require('../../../models/user');
 // Importar interceptores
-const { checkToken, checkRoleAdmin } = require('../middlewares/authentication');
+const { checkToken, checkRoleAdmin } = require('../../../middlewares/authentication');
 
 
 // El 2 parámetro es un middleware o interceptor

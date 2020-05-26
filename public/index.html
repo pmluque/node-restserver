@@ -15,40 +15,51 @@
     <!-- 3 -->
     <div class="g-signin2" data-onsuccess="onSignIn"></div>
     <!-- 6 Sign Out -->
-    <p>
-        <a href="#" onclick="signOut();">Sign out</a>
+    <img>
+    <a href="#" onclick="signOut();">Sign out</a>
 
-        <!-- 4 -->
-        <script>
-            function onSignIn(googleUser) {
-                var profile = googleUser.getBasicProfile();
-                console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-                console.log('Name: ' + profile.getName());
-                console.log('Image URL: ' + profile.getImageUrl());
-                console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    <!-- 10: Subida de ficheros -->
+    <form name="uploader" action="/upload" method="put" enctype="multipart/form-data">
+        <input type="file" name="file" id="file"></input>
+        <input type="submit" value="Upload"></input>
+    </form>
 
-                var id_token = googleUser.getAuthResponse().id_token;
-                console.log('Token: ' + id_token);
-                var xhr = new XMLHttpRequest();
-                //xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
-                xhr.open('POST', '/api/auth/g');
-                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.onload = function() {
-                    console.log('Signed in as: ' + xhr.responseText);
-                };
-                xhr.send('idtoken=' + id_token);
-            }
-        </script>
-        <!-- 6 Sign Out -->
-        <script>
-            function signOut() {
-                var auth2 = gapi.auth2.getAuthInstance();
-                auth2.signOut().then(function() {
-                    console.log('User signed out.');
-                });
-            }
-        </script>
-        <!-- 5: habilitar acceso a public -->
+    <!-- 13: Mostrar imagen : /api/utils/image/user/5ec2c88dec4e6d0160e610ef-112.png-->
+    <img src="http://localhost:3000/api/utils/image/user/5ec2c88dec4e6d0160e610ef-112.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InJvbGUiOiJBRE1JTl9ST0xFIiwic3RhdHVzIjp0cnVlLCJnb29nbGUiOmZhbHNlLCJfaWQiOiI1ZWMyYzg4ZGVjNGU2ZDAxNjBlNjEwZWYiLCJuYW1lIjoidTEyIiwiZW1haWwiOiJ1MTJAZ21haWwuY29tIiwiX192IjowfSwiaWF0IjoxNTkwMzE0NTc1LCJleHAiOjE1OTI5MDY1NzV9.vyc8vy0E0i5l5TJGV2MjykOcIwH50ZPSw8kz_zK_Yr8"></img>
+
+    <!-- 4 -->
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+            var id_token = googleUser.getAuthResponse().id_token;
+            console.log('Token: ' + id_token);
+            var xhr = new XMLHttpRequest();
+            //xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
+            xhr.open('POST', '/api/auth/g');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                console.log('Signed in as: ' + xhr.responseText);
+            };
+            xhr.send('idtoken=' + id_token);
+        }
+    </script>
+    <!-- 6 Sign Out -->
+    <script>
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+                console.log('User signed out.');
+            });
+        }
+    </script>
+    <!-- 5: habilitar acceso a public -->
+
+
 </body>
 
 </html>

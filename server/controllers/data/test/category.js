@@ -11,11 +11,11 @@
 const express = require('express');
 
 // Importar interceptores
-let { checkToken, checkRoleAdmin } = require('../middlewares/authentication');
+let { checkToken, checkRoleAdmin } = require('../../../middlewares/authentication');
 
 // Aplicación
 let app = express();
-let Category = require('../models/category');
+let Category = require('../../../models/category');
 
 // Rutas
 

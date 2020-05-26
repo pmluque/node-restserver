@@ -44,3 +44,10 @@ process.env.TOKEN_SEED = process.env.TOKEN_SEED || 'seed-developer-$%&';
 // Crear variable en heroku si es valor es variable
 //========================================
 process.env.OAUTH_CLIENT_ID = process.env.OAUTH_CLIENT_ID || '972780077903-b82lscqo5vhp95s7k81lqmrqqvuhc47d.apps.googleusercontent.com';
+
+//========================================
+// UPLOAD_PATH: Path donde se suben los uploads
+// 
+//========================================
+
+process.env.UPLOAD_PATH = process.env.UPLOAD_PATH || 'uploads';
